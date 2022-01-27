@@ -73,6 +73,10 @@ This object represents a user of Donut.
 - name (string)
 
   The user's full name.
+  
+- username (string)
+
+  The user's username.
 
 - phone (string)
 
@@ -91,6 +95,9 @@ This object represents a user of Donut.
 ### POST /api/v1/users
 
 ### Parameters
+- username (required)
+  
+  The user's username
 
 - email (required)
 
@@ -117,6 +124,10 @@ The user object.
 - name (optional)
 
   The user's full name.
+  
+- username (optional)
+  
+  The user's username
 
 - phone (optional)
 
