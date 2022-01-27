@@ -7,3 +7,6 @@ lint:
 
 run:
 	cd web && python3 -m flask run
+
+deps:
+	python3 -m pip install -r requirements.txt
