@@ -1,3 +1,4 @@
+default: run
 
 test:
 	pytest -v
