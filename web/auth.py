@@ -34,19 +34,19 @@ def login(): # pylint: disable=missing-function-docstring
     try:
         data = flask.request.get_json()
     except Exception: # pylint: disable=broad-except
-        return web.respond_bad_request(*errors.CODE_INVALID_JSON)
+        return web.respond_bad_request(*errors.ERR_INVALID_JSON)
 
     email = data.get('email')
     if email is None:
-        return web.respond_bad_request(*errors.CODE_MISSING_EMAIL)
+        return web.respond_bad_request(*errors.ERR_MISSING_EMAIL)
 
     try:
         user = users.User.get(email=data.get('email'))
     except exceptions.NotFoundError:
-        return web.respond_bad_request(*errors.CODE_NO_SUCH_EMAIL)
+        return web.respond_bad_request(*errors.ERR_NO_SUCH_EMAIL)
 
     if not user.check_password(data.get('password')):
-        return web.respond_bad_request(*errors.CODE_INCORRECT_PASSWORD)
+        return web.respond_bad_request(*errors.ERR_INCORRECT_PASSWORD)
 
     resp = web.respond_ok('OK')
     resp.headers[TOKEN_KEY] = jwt.encode(dict(id=user.id),

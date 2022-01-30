@@ -16,7 +16,7 @@ def respond_not_found(message):
 
 def respond_bad_request(code, message):
     '''400 response'''
-    return flask.jsonify(errors.BadRequest(code, message))
+    return flask.jsonify(dict(code=code, message=message)), http.HTTPStatus.BAD_REQUEST
 
 def respond_exception():
     '''Responds a 500 with exception's traceback.'''

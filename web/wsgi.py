@@ -4,17 +4,18 @@ import pathlib
 import sys
 
 import flask
-
-import db
+import flask_sockets
 
 sys.path.insert(0, pathlib.Path(__file__).resolve().parent.parent.as_posix())
-from web import auth, users # pylint: disable=import-error, wrong-import-position
+import db # pylint: disable=wrong-import-position
+from web import auth, chat, users # pylint: disable=import-error, wrong-import-position
 
 def create_app(test_config=None):
     '''Creates and configures an instance of the Flask application'''
     app = flask.Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
+        WSS_PORT=5001,
         DSN=os.path.join('sqlite:////', app.instance_path.strip('/'), 'donut.sqlite'),
     )
 
@@ -41,5 +42,8 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp, url_prefix='/api/v1')
     app.register_blueprint(users.bp, url_prefix='/api/v1/users')
+
+    socks = flask_sockets.Sockets(app)
+    socks.register_blueprint(chat.ws, url_prefix='/chats')
 
     return app
