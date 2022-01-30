@@ -86,7 +86,7 @@ This object represents a user of Donut.
 
   The user's email address.
 
-- verified (bool)
+- verified (boolean)
 
   Has the value TRUE if the user has verified its real identifity.
 
@@ -248,10 +248,21 @@ N/A
 
 A dictionary with a **data** property that contains an array of a user's all addresses. Each entry in the array is a separate address object. If no more addresses are available, the resulting array will be empty.
 
+- object (string, value is "list")
+
+  A string describing the object type returned.
+
+- data (array)
+
+  An array containing the actual response elements, paginated by any request parameters.
+
+- has_more (boolean)
+
+  Whether or not there are more elements available after this set. If **false**, this set comprises the end of the list.
+
 ```json
 {
   "object": "list",
-  "url": "/api/v1/users/:uid/addresses",
   "has_more": false,
   "data": [
     {...},
@@ -412,6 +423,141 @@ The fulfilment object.
 
 The fulfilment object.
 
+# Chats
+
+The object represents a conversation threading.
+
+## The thread object
+
+### Attributes
+
+- id (integer)
+
+  Unique identifier for the object.
+
+- fulfilment (integer)
+
+  The fulfilment you want to discuss
+
+- initiator (integer)
+
+  The initialized user's ID.
+
+- peer (integer)
+
+  The peer ID.
+
+## The message object
+
+### Attributes
+
+- id (integer)
+
+  Unique identifier for the object.
+
+- thread (integer)
+
+  The thread ID.
+
+- message (string)
+
+  The text message.
+
+- image (string)
+
+  The image's URL if any.
+
+- updated (datetime)
+
+  The message's updated time.
+
+## Endpoints
+
+- POST /api/v1/chats
+- POST /api/v1/chats/:thread_id
+- GET /api/v1/chats/:thread_id
+
+## Establish/Resume a conversation threading (handshake)
+
+### POST /api/v1/chats
+
+### Parameters
+
+- fulfilment (required integer)
+
+  The fulfilment ID. The conversation threading is talking about a specific fulfilment object.
+
+- peer (required integer)
+
+  The ID of the user that you want to establish a conversation threading.
+
+### Response
+
+The thread object.
+
+## Send a text
+
+### POST /api/v1/chats/:thread_id
+
+### Parameters
+
+- message (required string)
+
+  The text message.
+
+- image (optional image)
+
+  The image file content.
+
+### Response
+
+The message object
+
+## List all messages of a thread
+
+### GET /api/v1/chats/:thread_id
+
+### Parameters
+
+- limit (optional integer)
+
+  A limit on the number of messages to be returned. Limit can range between 1 and 100, and the default is 10.
+
+- ending_before (optional integer)
+
+  A cursor for use in pagination. The ending_before is a message ID that defines your place in the list. For instance, if you make a list request and receive 100 messages, **starting with** 12345678, your subsequent call can include ending_before=12345678 in order to fetch the **previous** page of the list.
+
+### Response
+
+A dictionary with a **data** property that contains an array of messages. Each entry in the array is a separate message object.
+
+- object (string, value is "list")
+
+  A string describing the object type returned.
+
+- data (array)
+
+  An array containing the actual response elements, paginated by any request parameters.
+
+- has_more (boolean)
+
+  Whether or not there are more elements available after this set. If **false**, this set comprises the end of the list.
+
+```json
+{
+  "object": "list",
+  "has_more": true,
+  "data": [
+    {...},
+    {...},
+    {...},
+    ...
+  ]
+}
+```
+
+
+
 # Images
 
 The object represents an image which binds to a demand/donation/user or whatever objects.
@@ -424,11 +570,15 @@ The object represents an image which binds to a demand/donation/user or whatever
   
 - target_type (string)
 
-  The target type that the image binds to. One of **demand**, **donation**, **fulfilment**, and **user**.
+  The target type that the image binds to. One of **demand**, **donation**, **fulfilment**, **chat**, and **user**.
   
 - target_id (integer)
 
   The target ID.
+  
+- url (string)
+
+  The image's URL.
 
 ## Endpoints
 
@@ -446,10 +596,21 @@ N/A
 
 A dictionary with a **data** property that contains an array of images. Each entry in the array is a separate image object.
 
+- object (string, value is "list")
+
+  A string describing the object type returned.
+
+- data (array)
+
+  An array containing the actual response elements, paginated by any request parameters.
+
+- has_more (boolean)
+
+  Whether or not there are more elements available after this set. If **false**, this set comprises the end of the list.
+
 ```json
 {
-  "object": "<demand | donation | fulfilment | user>_image",
-  "url": "/api/v1/images",
+  "object": "list",
   "has_more": false,
   "data": [
     {...},
