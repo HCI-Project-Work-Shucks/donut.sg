@@ -72,5 +72,4 @@ class User(db.Base):
 
     def to_dict(self): # pylint: disable=missing-function-docstring
         return dict(id=self.id,
-                    email=self.email,
-                    password=self.password)
+                    email=self.email)
