@@ -32,6 +32,9 @@ def create_app(test_config=None):
     eng, sess = db.create_engine(app.config['DSN'])
     db.set_defaults(eng, sess)
 
+    if app.config['SECRET_KEY'] == 'dev':
+        db.Base.metadata.create_all(eng)
+
     @app.teardown_appcontext
     def shutdown_session(exception=None): # pylint: disable=unused-argument
         sess.remove()
