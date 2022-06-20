@@ -3,9 +3,10 @@ import flask
 
 import exceptions
 import web
-from models import users
+from models import users, addresses
 
 bp = flask.Blueprint('users', __name__)
+
 
 def check(email, pwd):
     '''Checks the validation of email address and plain text password for register.'''
@@ -17,19 +18,31 @@ def check(email, pwd):
 
     return None
 
+
 @bp.route('/<int:ident>', methods=('GET',))
-def get(ident): # pylint: disable=missing-function-docstring
+def get(ident):  # pylint: disable=missing-function-docstring
     try:
         user = users.User.get(ident=ident)
     except exceptions.NotFoundError as ex:
         return web.respond_not_found(ex.message)
-    except Exception: # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         return web.respond_exception()
     else:
         return flask.jsonify(user.to_dict())
 
+
+@bp.route('/<int:ident>/addresses', methods=('GET',))
+def get_addresses(ident):
+    try:
+        user_addresses = addresses.Address.get(ident)
+    except Exception:
+        return web.respond_exception()
+    else:
+        return {"object": "list", "has_more": False, "data": user_addresses}
+
+
 @bp.route('/', methods=('POST',))
-def register(): # pylint: disable=missing-function-docstring
+def register():  # pylint: disable=missing-function-docstring
     data = flask.request.get_json()
     email = data.get('email')
     pwd = data.get('password')
@@ -39,7 +52,7 @@ def register(): # pylint: disable=missing-function-docstring
 
     try:
         user = users.User.create(email, pwd)
-    except Exception: # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         return web.respond_exception()
 
     return flask.jsonify(user.to_dict())
