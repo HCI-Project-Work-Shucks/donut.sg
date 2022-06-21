@@ -16,9 +16,10 @@ JWT_SIGNATURE_ALGORITHM = 'HS256'
 
 bp = flask.Blueprint('auth', __name__)
 
+
 @bp.before_app_request
 def set_login_user_id():
-    '''Loads the logged in user before any request.'''
+    '''Loads the logged-in user before any request.'''
     token = flask.request.headers.get(TOKEN_KEY)
     if not token:
         return
@@ -27,13 +28,14 @@ def set_login_user_id():
                          key=flask.current_app.config[SECRET_KEY],
                          algorithm=JWT_SIGNATURE_ALGORITHM)
 
-    flask.g.login_user_id = payload.get('uid') # pylint: disable=assigning-non-slot
+    flask.g.login_user_id = payload.get('uid')  # pylint: disable=assigning-non-slot
+
 
 @bp.route('/login', methods=('POST',))
-def login(): # pylint: disable=missing-function-docstring
+def login():  # pylint: disable=missing-function-docstring
     try:
         data = flask.request.get_json()
-    except Exception: # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         return web.respond_bad_request(*errors.ERR_INVALID_JSON)
 
     email = data.get('email')
@@ -54,6 +56,7 @@ def login(): # pylint: disable=missing-function-docstring
                                          algorithm=JWT_SIGNATURE_ALGORITHM)
     return resp
 
+
 def login_required(view):
     '''A decorator for checking the request if is authorized.'''
 
@@ -65,10 +68,10 @@ def login_required(view):
             return flask.make_response('unauthorized', http.HTTPStatus.UNAUTHORIZED)
 
         try:
-            flask.g.login_user = users.User.get(uid) # pylint: disable=assigning-non-slot
+            flask.g.login_user = users.User.get(uid)  # pylint: disable=assigning-non-slot
         except exceptions.NotFoundError:
             return flask.make_response('forbidden', http.HTTPStatus.FORBIDDEN)
-        except Exception: # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             return web.respond_exception()
 
         return view(*args, **kwargs)

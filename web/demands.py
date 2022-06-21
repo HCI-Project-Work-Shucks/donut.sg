@@ -10,13 +10,14 @@ bp = flask.Blueprint('demands', __name__)
 @bp.route('/', methods=('POST',))
 def create():
     data = flask.request.get_json()
-    category = int(data.get("category"))
+    owner = data.get("owner")
+    category = data.get("category")
     title = data.get("title")
-    quantity = int(data.get("quantity"))
+    quantity = data.get("quantity")
     desc = data.get("desc")
 
     try:
-        demand = demands.Demand.create(category, title, quantity, desc)
+        demand = demands.Demand.create(owner, category, title, quantity, desc)
     except Exception:
         return web.respond_exception()
 

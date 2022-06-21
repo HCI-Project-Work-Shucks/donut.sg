@@ -9,6 +9,7 @@ class Donation(db.Base):
     __tablename__ = "donation"
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    owner = sqlalchemy.Column(sqlalchemy.Integer)
     category = sqlalchemy.Column(sqlalchemy.Integer)
     title = sqlalchemy.Column(sqlalchemy.TEXT)
     quantity = sqlalchemy.Column(sqlalchemy.Integer)
@@ -19,15 +20,17 @@ class Donation(db.Base):
 
     def __init__(self, ident=None):
         self.id = ident
+        self.owner = None
         self.category = None
         self.title = None
         self.quantity = 0
         self.desc = None
 
     @classmethod
-    def create(cls, category, title, quantity, desc):
+    def create(cls, owner, category, title, quantity, desc):
         """Creates a new donation"""
-        donation = Demand()
+        donation = Donation()
+        donation.owner = owner
         donation.category = category
         donation.title = title
         donation.quantity = quantity
@@ -46,4 +49,4 @@ class Donation(db.Base):
         return donation
 
     def to_dict(self):
-        return dict(id=self.id, category=self.category, title=self.title, quantity=self.quantity, desc=self.desc)
+        return dict(id=self.id, owner=self.owner, category=self.category, title=self.title, quantity=self.quantity, desc=self.desc)
