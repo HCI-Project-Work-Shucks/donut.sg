@@ -1,0 +1,7 @@
+pylint
+PyJWT
+pytest
+flask==1.1.4
+Flask-SQLAlchemy
+Flask-Sockets
+websocket-client # just for ut

@@ -1,0 +1,23 @@
+name: lint and test
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v2
+
+      - name: upgrade pip
+        run: python3 -m pip install --upgrade pip
+
+      - name: make deps
+        run: make deps
+
+      - name: pylint
+        run: make lint
+
+      - name: unit-test
+        run: make test
