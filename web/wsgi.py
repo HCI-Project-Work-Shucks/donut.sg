@@ -8,7 +8,11 @@ import flask_sockets
 
 sys.path.insert(0, pathlib.Path(__file__).resolve().parent.parent.as_posix())
 import db  # pylint: disable=wrong-import-position
+<<<<<<< HEAD
+from web import auth, chat, users, demands, donations, fulfilments  # pylint: disable=import-error, wrong-import-position
+=======
 from web import auth, chat, users, addresses, demands, donations, fulfilments  # pylint: disable=import-error, wrong-import-position
+>>>>>>> 0e2b709f7ab3c16c1a6580d6eccc2f2c72fe74ce
 
 
 def create_app(test_config=None):
@@ -46,7 +50,10 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp, url_prefix='/api/v1')
     app.register_blueprint(users.bp, url_prefix='/api/v1/users')
+<<<<<<< HEAD
+=======
     app.register_blueprint(addresses.bp, url_prefix='/api/v1/addresses')
+>>>>>>> 0e2b709f7ab3c16c1a6580d6eccc2f2c72fe74ce
     app.register_blueprint(demands.bp, url_prefix='/api/v1/demands')
     app.register_blueprint(donations.bp, url_prefix='/api/v1/donations')
     app.register_blueprint(fulfilments.bp, url_prefix='/api/v1/fulfilments')

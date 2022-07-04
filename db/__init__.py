@@ -1,4 +1,5 @@
 # pylint: disable=missing-module-docstring
+from requests import request
 import sqlalchemy
 import sqlalchemy.orm
 from sqlalchemy.ext import declarative
@@ -24,6 +25,12 @@ def insert(obj):  # pylint: disable=missing-function-docstring
     session.commit()
     session.refresh(obj)
 
+def update(obj, new_val, user):
+    temp = request.form[obj]
+    session[obj] = temp
+    user.obj = new_val
+    session.commit()
+    session.refresh(obj)
 
 def delete(obj):
     session.delete(obj)

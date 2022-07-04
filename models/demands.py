@@ -1,3 +1,4 @@
+from email.errors import CloseBoundaryNotFoundDefect
 import sqlalchemy
 
 import db
@@ -10,10 +11,13 @@ class Demand(db.Base):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     owner = sqlalchemy.Column(sqlalchemy.Integer)
-    category = sqlalchemy.Column(sqlalchemy.Integer)
     title = sqlalchemy.Column(sqlalchemy.TEXT)
-    quantity = sqlalchemy.Column(sqlalchemy.Integer)
     desc = sqlalchemy.Column(sqlalchemy.TEXT)
+    closed = sqlalchemy.Column(sqlalchemy.Boolean)
+    deleted = sqlalchemy.Column(sqlalchemy.Boolean)
+    time = sqlalchemy.Column(sqlalchemy.TEXT)
+    picture = sqlalchemy.Column(sqlalchemy.TEXT)
+    
 
     def __repr__(self):
         return f"<Demand: {self.id!r}>"
@@ -21,24 +25,40 @@ class Demand(db.Base):
     def __init__(self, ident=None):
         self.id = ident
         self.owner = None
-        self.category = None
         self.title = None
-        self.quantity = 0
         self.desc = None
+        self.closed = False
+        self.deleted = False
+        self.time = None
+        self.picture = None
 
     @classmethod
-    def create(cls, owner, category, title, quantity, desc):
+    def create(cls, owner, title, desc, closed, deleted, time, picture):
         """Creates a new demand"""
         demand = Demand()
         demand.owner = owner
-        demand.category = category
         demand.title = title
-        demand.quantity = quantity
         demand.desc = desc
-
+        demand.closed = closed
+        demand.deleted = deleted
+        demand.time = time
+        demand.picture = picture
+        
         db.insert(demand)
 
         return demand
+    @classmethod
+    def change(cls, owner, closed=None, deleted=None, desc=None):
+        user = Demand.query.filter_by(owner==owner).first()
+
+        if desc:
+            db.update("desc", user, desc)
+            
+        if closed:
+            db.update("closed", user, closed)
+            
+        if deleted: 
+            db.update("deleted", user, deleted)
 
     @classmethod
     def get(cls, ident):
@@ -49,4 +69,4 @@ class Demand(db.Base):
         return demand
 
     def to_dict(self):
-        return dict(id=self.id, owner=self.owner, category=self.category, title=self.title, quantity=self.quantity, desc=self.desc)
+        return dict(id=self.id, owner=self.owner, title=self.title, desc=self.desc, closed=self.closed, deleted=self.deleted)
