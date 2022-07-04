@@ -108,5 +108,4 @@ class User(db.Base):
             db.update("profilePic", user, profilePic)
 
     def to_dict(self): # pylint: disable=missing-function-docstring
-        return dict(id=self.id,
-                    email=self.email)
+        return dict(id=self.id, email=self.email)

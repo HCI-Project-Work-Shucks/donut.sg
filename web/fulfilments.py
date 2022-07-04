@@ -24,8 +24,14 @@ def create():
 
 @bp.route('/<int:ident>', methods=('PUT',))
 def update(ident):
+<<<<<<< HEAD
     try:
         fulfilment = fulfilments.Fulfilment.change(ident, "closed")
+=======
+    status = flask.request.get_json().get("status")
+    try:
+        fulfilment = fulfilments.Fulfilment.update(ident, status)
+>>>>>>> 0e2b709f7ab3c16c1a6580d6eccc2f2c72fe74ce
     except exceptions.NotFoundError as ex:
         return web.respond_not_found(ex.message)
     except Exception:
